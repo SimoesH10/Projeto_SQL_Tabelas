@@ -1,3 +1,7 @@
+Projeto BDII 
+
+-- Tabela Aluno --
+
 CREATE TABLE Aluno (
     Matricula INT NOT NULL IDENTITY,
     nome VARCHAR(100) NOT NULL,
@@ -20,6 +24,8 @@ CREATE TABLE Aluno_Curso (
     FOREIGN KEY (CodCurso) REFERENCES Curso(CodCurso)
 );
 
+-- Tabela Disciplina --
+
 CREATE TABLE Disciplina (
     CodDisciplina INT NOT NULL IDENTITY,
     nome VARCHAR(100) NOT NULL,
@@ -27,6 +33,8 @@ CREATE TABLE Disciplina (
     PRIMARY KEY (CodDisciplina),
     FOREIGN KEY (CodCurso) REFERENCES Curso(CodCurso)
 );
+
+-- Tabela Professor --
 
 CREATE TABLE Professor (
     Matricula INT NOT NULL IDENTITY,
@@ -44,6 +52,8 @@ CREATE TABLE Disciplina_Professor (
     FOREIGN KEY (MatriculaProfessor) REFERENCES Professor(Matricula)
 );
 
+-- Tabela Boletim --
+
 CREATE TABLE Boletim (
     CodBoletim INT NOT NULL IDENTITY,
     MatriculaAluno INT NOT NULL,
@@ -56,7 +66,8 @@ CREATE TABLE Boletim (
     FOREIGN KEY (MatriculaProfessor) REFERENCES Professor(Matricula)
 );
 
--- Inserção de dados corrigida
+-- Inserção --
+
 INSERT INTO Aluno (nome, cpf, data_nasc)
 VALUES ('João', '12345678900', '2000-01-01');
 
@@ -75,7 +86,8 @@ VALUES (1, 1);
 INSERT INTO Boletim (MatriculaAluno, CodDisciplina, MatriculaProfessor, nota)
 VALUES (1, 1, 1, 10);
 
--- Consulta corrigida
+-- Consultas --
+
 SELECT A.nome AS Aluno, D.nome AS Disciplina
 FROM Aluno A
 JOIN Aluno_Curso AC ON A.Matricula = AC.MatriculaAluno
