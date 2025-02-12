@@ -1,1 +1,83 @@
+CREATE TABLE Aluno (
+    Matricula INT NOT NULL IDENTITY,
+    nome VARCHAR(100) NOT NULL,
+    cpf CHAR(11) NOT NULL UNIQUE,
+    data_nasc DATETIME,
+    PRIMARY KEY (Matricula)
+);
 
+CREATE TABLE Curso (
+    CodCurso INT NOT NULL IDENTITY,
+    nome VARCHAR(100) NOT NULL,
+    PRIMARY KEY (CodCurso)
+);
+
+CREATE TABLE Aluno_Curso (
+    MatriculaAluno INT NOT NULL,
+    CodCurso INT NOT NULL,
+    PRIMARY KEY (MatriculaAluno, CodCurso),
+    FOREIGN KEY (MatriculaAluno) REFERENCES Aluno(Matricula),
+    FOREIGN KEY (CodCurso) REFERENCES Curso(CodCurso)
+);
+
+CREATE TABLE Disciplina (
+    CodDisciplina INT NOT NULL IDENTITY,
+    nome VARCHAR(100) NOT NULL,
+    CodCurso INT NOT NULL,
+    PRIMARY KEY (CodDisciplina),
+    FOREIGN KEY (CodCurso) REFERENCES Curso(CodCurso)
+);
+
+CREATE TABLE Professor (
+    Matricula INT NOT NULL IDENTITY,
+    nome VARCHAR(100) NOT NULL,
+    cpf CHAR(11) NOT NULL UNIQUE,
+    data_nasc DATETIME,
+    PRIMARY KEY (Matricula)
+);
+
+CREATE TABLE Disciplina_Professor (
+    CodDisciplina INT NOT NULL,
+    MatriculaProfessor INT NOT NULL,
+    PRIMARY KEY (CodDisciplina, MatriculaProfessor),
+    FOREIGN KEY (CodDisciplina) REFERENCES Disciplina(CodDisciplina),
+    FOREIGN KEY (MatriculaProfessor) REFERENCES Professor(Matricula)
+);
+
+CREATE TABLE Boletim (
+    CodBoletim INT NOT NULL IDENTITY,
+    MatriculaAluno INT NOT NULL,
+    CodDisciplina INT NOT NULL,
+    MatriculaProfessor INT NOT NULL,
+    nota DECIMAL(5,2),
+    PRIMARY KEY (CodBoletim),
+    FOREIGN KEY (MatriculaAluno) REFERENCES Aluno(Matricula),
+    FOREIGN KEY (CodDisciplina) REFERENCES Disciplina(CodDisciplina),
+    FOREIGN KEY (MatriculaProfessor) REFERENCES Professor(Matricula)
+);
+
+-- Inserção de dados corrigida
+INSERT INTO Aluno (nome, cpf, data_nasc)
+VALUES ('João', '12345678900', '2000-01-01');
+
+INSERT INTO Curso (nome)
+VALUES ('TSI');
+
+INSERT INTO Aluno_Curso (MatriculaAluno, CodCurso)
+VALUES (1, 1);
+
+INSERT INTO Disciplina (nome, CodCurso)
+VALUES ('Banco de Dados', 1);
+
+INSERT INTO Disciplina_Professor (CodDisciplina, MatriculaProfessor)
+VALUES (1, 1);
+
+INSERT INTO Boletim (MatriculaAluno, CodDisciplina, MatriculaProfessor, nota)
+VALUES (1, 1, 1, 10);
+
+-- Consulta corrigida
+SELECT A.nome AS Aluno, D.nome AS Disciplina
+FROM Aluno A
+JOIN Aluno_Curso AC ON A.Matricula = AC.MatriculaAluno
+JOIN Curso C ON AC.CodCurso = C.CodCurso
+JOIN Disciplina D ON C.CodCurso = D.CodCurso;
