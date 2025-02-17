@@ -1,21 +1,21 @@
 Projeto BDII 
-
 -- Tabela Aluno --
-
 CREATE TABLE Aluno (
-    Matricula INT NOT NULL IDENTITY,
+    Matricula INT NOT NULL AUTO_INCREMENT,
     nome VARCHAR(100) NOT NULL,
     cpf CHAR(11) NOT NULL UNIQUE,
     data_nasc DATETIME,
     PRIMARY KEY (Matricula)
 );
 
+-- Tabela Curso --
 CREATE TABLE Curso (
-    CodCurso INT NOT NULL IDENTITY,
+    CodCurso INT NOT NULL AUTO_INCREMENT,
     nome VARCHAR(100) NOT NULL,
     PRIMARY KEY (CodCurso)
 );
 
+-- Tabela Aluno_Curso --
 CREATE TABLE Aluno_Curso (
     MatriculaAluno INT NOT NULL,
     CodCurso INT NOT NULL,
@@ -25,9 +25,8 @@ CREATE TABLE Aluno_Curso (
 );
 
 -- Tabela Disciplina --
-
 CREATE TABLE Disciplina (
-    CodDisciplina INT NOT NULL IDENTITY,
+    CodDisciplina INT NOT NULL AUTO_INCREMENT,
     nome VARCHAR(100) NOT NULL,
     CodCurso INT NOT NULL,
     PRIMARY KEY (CodDisciplina),
@@ -35,15 +34,15 @@ CREATE TABLE Disciplina (
 );
 
 -- Tabela Professor --
-
 CREATE TABLE Professor (
-    Matricula INT NOT NULL IDENTITY,
+    Matricula INT NOT NULL AUTO_INCREMENT,
     nome VARCHAR(100) NOT NULL,
     cpf CHAR(11) NOT NULL UNIQUE,
     data_nasc DATETIME,
     PRIMARY KEY (Matricula)
 );
 
+-- Tabela Disciplina_Professor --
 CREATE TABLE Disciplina_Professor (
     CodDisciplina INT NOT NULL,
     MatriculaProfessor INT NOT NULL,
@@ -53,9 +52,8 @@ CREATE TABLE Disciplina_Professor (
 );
 
 -- Tabela Boletim --
-
 CREATE TABLE Boletim (
-    CodBoletim INT NOT NULL IDENTITY,
+    CodBoletim INT NOT NULL AUTO_INCREMENT,
     MatriculaAluno INT NOT NULL,
     CodDisciplina INT NOT NULL,
     MatriculaProfessor INT NOT NULL,
@@ -66,25 +64,89 @@ CREATE TABLE Boletim (
     FOREIGN KEY (MatriculaProfessor) REFERENCES Professor(Matricula)
 );
 
--- Inserção --
+-- Inserção de dados --
 
+-- Inserir um aluno --
 INSERT INTO Aluno (nome, cpf, data_nasc)
-VALUES ('João', '12345678900', '2000-01-01');
+VALUES 
+    ('Lucas', '6789012345', '2002-09-14'),
+    ('Wesley', '1234567890', '1998-03-12'),
+    ('Arrascaeta', '0123456789', '1994-12-03'),
+    ('Gabriella', '7890123456', '1996-04-27'),
+    ('Bruno', '2345678901', '2000-07-25'),
+    ('Garibalda', '8901234567', '1995-08-19'),
+    ('Carla', '3456789012', '1997-11-05'),
+    ('Isadora', '9012345678', '2003-01-08'),
+    ('Fernanda', '5678901234', '1999-06-30'),
+    ('Robert', '4567890123', '2001-02-18'),
+    ('Vitória','9293949596','2000-02-22'),
+    ('Ângela','1049672849','2002-01-11'),
+    ('Denise','0195038173','2001-06-28'),
+    ('Thiago', '8765432109', '2001-03-10'),
+    ('Amanda', '5678901230', '2000-10-05'),
+    ('Carlos', '6789012340', '2002-12-15'),
+    ('Júlia', '7890123450', '1999-06-22'),
+    ('Rafael', '8901234569', '2003-02-20'),
+    ('Beatriz', '1234509876', '2000-11-18'),
+    ('Lucas', '2345612340', '2002-07-17'),
+    ('Sofia', '3456723458', '1998-08-05'),
+    ('Felipe', '4567834569', '1997-12-02'),
+    ('Bianca', '5678945670', '2001-09-27'),
+    ('Thiago', '6789056789', '2002-05-10');
 
+-- Inserir um curso --
 INSERT INTO Curso (nome)
-VALUES ('TSI');
+VALUES
+    ('TSI');
+    
 
-INSERT INTO Aluno_Curso (MatriculaAluno, CodCurso)
-VALUES (1, 1);
-
+-- Inserir uma disciplina --
 INSERT INTO Disciplina (nome, CodCurso)
-VALUES ('Banco de Dados', 1);
+VALUES 
+    
+    ('Programação Web I', 1),
+    ('Estrutura de Dados', 1),
+    ('Programação Web II', 1),
+    ('Banco de Dados', 1);
 
-INSERT INTO Disciplina_Professor (CodDisciplina, MatriculaProfessor)
-VALUES (1, 1);
+-- Inserir professores --
+INSERT INTO Professor (nome, cpf, data_nasc)
+VALUES 
+    ('Marcos Silva', '98765432100', '1980-05-15'),
+    ('Ana Costa', '12345678901', '1985-07-20'),
+    ('Wibilly Pereira', '23456789012', '1979-02-25'),
+    ('Maria Oliveira', '34567890123', '1990-10-10'),
+    ('Felipe Santos', '45678901234', '1975-03-05'),
+    ('Patrícia Souza', '56789012345', '1982-06-12'),
+    ('Ricardo Lima', '67890123456', '1988-11-30'),
+    ('Marcos Rocha', '78901234567', '1993-01-17'),
+    ('Rafael Martins', '89012345678', '1981-08-22'),
+    ('Luciano Almeida', '90123456789', '1992-04-03'),
+    ('Bruno Fernandes', '01234567890', '1987-09-18'),
+    ('Carla Mendes', '12345098765', '1989-01-11');
 
+
+INSERT INTO Aluno_Curso (MatriculaAluno, CodCurso) 
+VALUES 
+    (1, 1),
+    (2, 1),
+    (3, 1),
+    (4, 1),
+    (5, 1);
+
+-- Associar disciplina ao professor --
+INSERT INTO Disciplina_Professor (CodDisciplina, MatriculaProfessor) 
+VALUES 
+    (1, 1),
+    (2, 2),
+    (3, 3),
+    (4, 4);
+    
+
+-- Inserir notas no boletim --
 INSERT INTO Boletim (MatriculaAluno, CodDisciplina, MatriculaProfessor, nota)
-VALUES (1, 1, 1, 10);
+VALUES
+    (1,1,1,9.5);
 
 -- Consultas --
 
