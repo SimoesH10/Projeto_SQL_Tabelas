@@ -1,1 +1,163 @@
+-- SQL BDII - Gerenciar Local Acadêmico --
 
+-- Criar tabela Aluno
+CREATE TABLE Aluno (
+    Matricula INT NOT NULL AUTO_INCREMENT,
+    nome VARCHAR(100) NOT NULL,
+    cpf CHAR(11) NOT NULL UNIQUE,
+    data_nasc DATE,
+    PRIMARY KEY (Matricula)
+);
+
+-- Criar tabela Curso
+CREATE TABLE Curso (
+    CodCurso INT NOT NULL AUTO_INCREMENT,
+    nome VARCHAR(100) NOT NULL,
+    PRIMARY KEY (CodCurso)
+);
+
+-- Criar tabela Aluno_Curso (tabela de associação)
+CREATE TABLE Aluno_Curso (
+    MatriculaAluno INT NOT NULL,
+    CodCurso INT NOT NULL,
+    PRIMARY KEY (MatriculaAluno, CodCurso),
+    FOREIGN KEY (MatriculaAluno) REFERENCES Aluno(Matricula),
+    FOREIGN KEY (CodCurso) REFERENCES Curso(CodCurso)
+);
+
+-- Criar tabela Disciplina
+CREATE TABLE Disciplina (
+    CodDisciplina INT NOT NULL AUTO_INCREMENT,
+    nome VARCHAR(100) NOT NULL,
+    CodCurso INT NOT NULL,
+    PRIMARY KEY (CodDisciplina),
+    FOREIGN KEY (CodCurso) REFERENCES Curso(CodCurso)
+);
+
+-- Criar tabela Professor
+CREATE TABLE Professor (
+    Matricula INT NOT NULL AUTO_INCREMENT,
+    nome VARCHAR(100) NOT NULL,
+    cpf CHAR(11) NOT NULL UNIQUE,
+    data_nasc DATE,
+    PRIMARY KEY (Matricula)
+);
+
+-- Criar tabela Disciplina_Professor (tabela de associação)
+CREATE TABLE Disciplina_Professor (
+    CodDisciplina INT NOT NULL,
+    MatriculaProfessor INT NOT NULL,
+    PRIMARY KEY (CodDisciplina, MatriculaProfessor),
+    FOREIGN KEY (CodDisciplina) REFERENCES Disciplina(CodDisciplina),
+    FOREIGN KEY (MatriculaProfessor) REFERENCES Professor(Matricula)
+);
+
+-- Criar tabela Boletim
+CREATE TABLE Boletim (
+    CodBoletim INT NOT NULL AUTO_INCREMENT,
+    MatriculaAluno INT NOT NULL,
+    CodDisciplina INT NOT NULL,
+    MatriculaProfessor INT NOT NULL,
+    nota DECIMAL(4,2),
+    PRIMARY KEY (CodBoletim),
+    FOREIGN KEY (MatriculaAluno) REFERENCES Aluno(Matricula),
+    FOREIGN KEY (CodDisciplina) REFERENCES Disciplina(CodDisciplina),
+    FOREIGN KEY (MatriculaProfessor) REFERENCES Professor(Matricula)
+);
+
+-- Inserir cursos 
+INSERT INTO Curso (nome) VALUES
+('Tecnologia de Sistemas para Internet'),
+('Ciência da Computação'),
+('Análise e Desenvolvimento de Sistemas'),
+('Engenharia de Software');
+
+-- Inserir alunos
+INSERT INTO Aluno (nome, cpf, data_nasc) VALUES
+('Hugo Simões', '11111111111', '2000-05-10'),
+('Eduardo Fontes', '22222222222', '1999-07-15'),
+('Robert Wendel', '33333333333', '1998-12-20'),
+('José Jefferson', '44444444444', '2001-03-25'),
+('Maria de Fátima', '55555555555', '2002-08-30'),
+('Matheus Rian', '66666666666', '2000-11-05'),
+('Marcos Paulo', '77777777777', '1999-09-18'),
+('Kayo Ronald', '88888888888', '2003-01-22'),
+('Igor Breno', '99999999999', '2001-06-10'),
+('Marcelo Alves', '00000000000', '1998-04-15'),
+('José Isaias', '10101010101', '2004-04-11'),
+('José Thiago', '20202020202', '2004-04-11'),
+('Lucas Silva', '30303030303', '1997-10-25');
+
+-- Associar alunos a cursos
+INSERT INTO Aluno_Curso (MatriculaAluno, CodCurso) VALUES
+(1,1), (2,1), (3,2), (4,2), (5,3), (6,3), (7,1), (8,2), (9,3), (10,1), (11, 4), (12, 4), (13, 2);
+
+-- Inserir disciplinas
+INSERT INTO Disciplina (nome, CodCurso) VALUES
+('Banco de Dados II', 1),
+('Programação Web II', 1),
+('Marketing Digital', 2),
+('Protocolo de Interconexões de Redes', 4),
+('Estrutura de Dados', 3);
+
+-- Inserir professores
+INSERT INTO Professor (nome, cpf, data_nasc) VALUES
+('Williby Ferreira', '12345678900', '1980-10-05'),
+('Alex Negreiro', '23456789011', '1975-06-20'),
+('Ygor Gardel', '34567890122', '1982-09-12'),
+('Luciano Alexandre', '34217888122', '1993-09-09'),
+('Rômulo Menezes', '34567896512', '1980-07-11');
+
+-- Associar disciplinas a professores 
+INSERT INTO Disciplina_Professor (CodDisciplina, MatriculaProfessor) VALUES
+(1,1), (2,2), (3,3), (4,4), (5,5);
+
+-- Inserir notas no boletim
+INSERT INTO Boletim (MatriculaAluno, CodDisciplina, MatriculaProfessor, nota) VALUES
+(1, 1, 1, 8.5), 
+(2, 2, 2, 7.0), 
+(3, 3, 3, 9.2),
+(4, 4, 4, 6.8), 
+(5, 5, 5, 8.0), 
+(6, 1, 1, 7.5),
+(7, 2, 2, 9.0), 
+(8, 3, 3, 8.2), 
+(9, 4, 4, 7.1), 
+(10, 5, 5, 6.5),
+(11, 4, 3, 8.1),
+(12, 4, 3, 8.5),
+(13, 4, 4, 5.2);
+
+-- Consultas para verificar os dados inseridos
+
+-- Selecionar todos os alunos
+SELECT * FROM Aluno;
+
+-- Selecionar todos os cursos
+SELECT * FROM Curso;
+
+-- Selecionar todos os alunos e seus cursos
+SELECT A.Matricula, A.nome, C.nome AS Curso
+FROM Aluno A
+JOIN Aluno_Curso AC ON A.Matricula = AC.MatriculaAluno
+JOIN Curso C ON AC.CodCurso = C.CodCurso;
+
+-- Selecionar todas as disciplinas de um curso específico
+SELECT D.nome AS Disciplina, C.nome AS Curso
+FROM Disciplina D
+JOIN Curso C ON D.CodCurso = C.CodCurso
+WHERE C.CodCurso = 1;
+
+-- Selecionar todas as disciplinas e seus professores
+SELECT D.nome AS Disciplina, P.nome AS Professor
+FROM Disciplina D
+JOIN Disciplina_Professor DP ON D.CodDisciplina = DP.CodDisciplina
+JOIN Professor P ON DP.MatriculaProfessor = P.Matricula;
+
+-- Selecionar o boletim de um aluno específico
+SELECT A.nome AS Aluno, D.nome AS Disciplina, P.nome AS Professor, B.nota
+FROM Boletim B
+JOIN Aluno A ON B.MatriculaAluno = A.Matricula
+JOIN Disciplina D ON B.CodDisciplina = D.CodDisciplina
+JOIN Professor P ON B.MatriculaProfessor = P.Matricula
+WHERE A.Matricula = 1;
